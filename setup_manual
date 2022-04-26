@@ -172,10 +172,14 @@ pom.xml 중 java-version 1.8 있는 /properties(15line) 과
 ----------------------------------------------------------------------------------------------------------------
 #12. 까지가 기본적으로 해야할 세팅!!
 
-
 - web,xml 에서 *.페이지 명 및 웰컴페이지 설정 가능
 - root-context.xml에서 오라클 경로 설정함!!!
 
+***** 매퍼는 반드시 한 패키지만 사용하고 그 안에 xml 넣어야함!!!  
+ - root-context.xml 에 매퍼 경로 나와있음.
+
+#18. 이미지, 동영상, js, css 파일등이 위치하는 경로를 의미한다.
+                            그 경로는 /webapp/resources 안에 넣어야 함
 
 *** 수정해야 함 ***
 - #22. expression="execution(public * com.spring..*Controller.*(..))" 
@@ -203,3 +207,31 @@ public 리턴타입 아무거나 패키지 com.spring.아무이름.controller.(�
 	</definition>								ex) /WEB-INF/views/tiles1/test/sample/tiles_test_3.jsp
 
 </tiles-definitions>
+
+
+bean 충돌로 WAS 구동안되면
+1. 패키지 안의 중복되는 이름을 바꾸거나
+2. 패키지경로까지 포함해서 이름 정의(com.bts.*.*.boardDAO)
+==> servlet-context.xml 에서 FullBeanNameGenerator 쓰면 알아서 2번 해줌
+(대신 경로에 저 generator가 있어야 해요)
+
+의존객체(DI : Dependency Injection)
+- 핸드폰이 작동하려면 배터리가 있어야함
+- 핸드폰의 의존객체는 배터리
+==> 즉, dao에서 sql문을 실행하려면 sqlsession이 있어야 하고, 서비스에서 dao를 실행하려면 dao의존객체가 필요하다.
+
+spring에선 느슨한결합(Bean 이용)으로 단단한결합(예 : InterBoardDAO bdao = new BoardDAO(); ) 필요없음
+==> IOC(Inversion of Control, 제어역전)
+
+
+Controller 에서 @ResponseBody(spring 써있는거 import) 사용하는 경우
+- 일반적으로 JSON 값을 return 시 사용
+/*
+    @ResponseBody 란?
+     메소드에 @ResponseBody Annotation이 되어 있으면 return 되는 값은 View 단 페이지를 통해서 출력되는 것이 아니라 
+    return 되어지는 값 그 자체를 웹브라우저에 바로 직접 쓰여지게 하는 것이다. 일반적으로 JSON 값을 Return 할때 많이 사용된다.  
+   
+   >>> 스프링에서 json 또는 gson을 사용한 ajax 구현시 데이터를 화면에 출력해 줄때 한글로 된 데이터가 '?'로 출력되어 한글이 깨지는 현상이 있다. 
+               이것을 해결하는 방법은 @RequestMapping 어노테이션의 속성 중 produces="text/plain;charset=UTF-8" 를 사용하면 
+               응답 페이지에 대한 UTF-8 인코딩이 가능하여 한글 깨짐을 방지 할 수 있다. <<< 
+  */
